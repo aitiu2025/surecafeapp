@@ -5,6 +5,7 @@
 
 # Claude Code project memory & session data
 .claude/
+CLAUDE.md
 
 # Logs
 logs

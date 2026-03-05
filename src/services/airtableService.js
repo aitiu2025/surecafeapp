@@ -119,6 +119,7 @@ export const TABLES = {
   MATCHED_RESUMES: 'Matched Resumes',
   STATUSES: 'Statuses',
   CLIENTS: 'Clients',
+  USERS: 'Users',
 };
 
 /**
