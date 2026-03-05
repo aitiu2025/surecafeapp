@@ -1,0 +1,276 @@
+/* =============================================
+   SureCafe AI - Global Shared Styles
+   ============================================= */
+
+:root {
+  --surecafe-blue: #1976d2;
+  --surecafe-blue-light: #42a5f5;
+  --surecafe-blue-dark: #1565c0;
+  --surecafe-orange: #ff9800;
+  --surecafe-orange-light: #ffb74d;
+  --surecafe-orange-dark: #f57c00;
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #eeeeee;
+  --gray-300: #e0e0e0;
+  --gray-400: #bdbdbd;
+  --gray-500: #9e9e9e;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #212121;
+  --white: #ffffff;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.04);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+
+ol, ul {
+  padding: 0 !important;
+}
+
+/* Page section titles */
+.section-title {
+  color: #FF6F21;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 500;
+  color: #0074c8;
+}
+
+/* Section card container */
+.section-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  padding: 20px;
+}
+
+.section-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Shared filter dropdown */
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-btn {
+  padding: 3px 14px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: left;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-btn:hover {
+  border-color: #90caf9;
+  background: #f8fbff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.filter-btn.has-selection {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+  font-weight: 600;
+}
+
+.filter-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 220px;
+  max-height: 280px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.filter-menu.open-upward {
+  top: auto;
+  bottom: 110%;
+}
+
+.filter-menu input[type="checkbox"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.filter-menu label {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #374151;
+  font-weight: 400;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.filter-menu label:hover {
+  background: #f3f4f6;
+}
+
+.filter-dropdown.active .filter-menu {
+  display: block;
+}
+
+.filter-search {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+}
+
+.filter-search:focus {
+  border-color: #90caf9 !important;
+  box-shadow: 0 0 0 3px rgba(144,202,249,0.1) !important;
+}
+
+/* Pagination */
+.pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.pagination-controls button {
+  border: none;
+  background: #b9cde1;
+  color: #071d38;
+  padding: 4px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+  font-weight: 400;
+}
+
+.pagination-controls button:hover {
+  background: #3367d6;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pagination-controls button.active {
+  background: #3367d6;
+  color: white !important;
+  font-weight: 600;
+}
+
+.pagination-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Result / status modal (web-process-modal pattern) */
+.web-process-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.web-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 360px;
+  max-width: 90%;
+  text-align: left;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.web-close-btn {
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 7px;
+  top: 1px;
+}
+
+.web-modal-content h3 {
+  margin-top: -5px;
+  color: #1976d2;
+  font-weight: 500;
+  border-bottom: solid 1px #1976d2;
+  padding-bottom: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Spinner */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.processSpin {
+  width: 18px;
+  height: 18px;
+  vertical-align: text-bottom;
+  border-width: 3px;
+  color: #7fb4f9;
+}
+
+/* ─── Reports page tables (.rpt-tbl) ─── */
+.rpt-tbl {width: 100%; border-collapse: collapse; font-size: 14px; }
+.rpt-tbl thead { display: table-header-group; background: #f8f9fa; border-bottom: 2px solid #E5E7EB; }
+.rpt-tbl tbody { display: table-row-group; }
+.rpt-tbl tr { display: table-row; }
+.rpt-tbl th { display: table-cell; padding: 12px; text-align: left; font-weight: 600; color: #374151; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rpt-tbl td { display: table-cell; padding: 12px; border-bottom: 1px solid #f3f3f3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rpt-tbl tbody tr:hover { background: #f8f9fa; }
+
+/* ─── Reports page tab navigation ─── */
+.tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #E5E7EB; }
+.tab-btn { padding: 10px 20px; border: none; background: transparent; cursor: pointer; font-size: 14px; font-weight: 500; color: #999; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+.tab-btn:hover { color: #555; }
+.tab-btn.active { color: #1976d2; border-bottom-color: #1976d2; font-weight: 600; }
