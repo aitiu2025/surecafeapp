@@ -203,6 +203,13 @@ export const useAuthStore = defineStore('auth', () => {
     return record;
   }
 
+  /** Patch user fields in state + persist session (for self-profile updates). */
+  function patchUser(fields) {
+    if (!user.value) return;
+    user.value = { ...user.value, ...fields };
+    _saveSession();
+  }
+
   return {
     // State / computed
     user, isLoggedIn, isAdmin, isRecruiter, isManager, fullName, initials,
@@ -210,5 +217,6 @@ export const useAuthStore = defineStore('auth', () => {
     login, logout,
     restoreSession, updateLastActivity, checkSessionExpiry,
     updatePassword, requestPasswordReset, verifyResetToken,
+    patchUser,
   };
 });

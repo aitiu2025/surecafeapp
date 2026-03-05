@@ -191,8 +191,7 @@ async function saveUser() {
       last_name:  form.last_name.trim(),
       email:      emailLower,
       role:       form.role,
-      is_active:  form.is_active,
-      updated_at: new Date().toISOString(),
+      is_active:  form.is_active
     };
     if (form.password) fields.password_hash = await bcrypt.hash(form.password, 10);
 

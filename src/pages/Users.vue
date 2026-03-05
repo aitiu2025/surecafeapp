@@ -191,8 +191,7 @@ async function saveUser() {
       last_name:  form.last_name.trim(),
       email:      emailLower,
       role:       form.role,
-      is_active:  form.is_active,
-      updated_at: new Date().toISOString(),
+      is_active:  form.is_active
     };
     if (form.password) fields.password_hash = await bcrypt.hash(form.password, 10);
 
@@ -314,6 +313,7 @@ function avatarInitials(u) {
 
     <!-- ─── Table ─── -->
     <div v-else class="table-card">
+      <div class="table-wrapper">
       <table class="u-table">
         <colgroup>
           <col style="width:26%">
@@ -374,6 +374,7 @@ function avatarInitials(u) {
           </tr>
         </tbody>
       </table>
+      </div><!-- /table-wrapper -->
 
       <!-- Pagination -->
       <div v-if="totalPages > 1" class="pagination-controls" style="padding:10px 20px;">
@@ -405,27 +406,23 @@ function avatarInitials(u) {
 
             <!-- Profile picture section -->
             <div class="pic-section">
-              <div class="pic-preview-wrap">
+              <div class="pic-circle-wrap">
                 <div class="pic-circle">
                   <img v-if="picPreview || existingPic" :src="picPreview || existingPic" alt="" class="pic-img" />
                   <i v-else class="bi bi-person-fill pic-placeholder"></i>
                 </div>
-                <div class="pic-actions">
-                  <label class="pic-upload-btn">
-                    <i class="bi bi-camera-fill me-2"></i>
-                    {{ picPreview || existingPic ? 'Change photo' : 'Upload photo' }}
-                    <input ref="picInputRef" type="file" accept="image/*" style="display:none;" @change="onPicChange" />
-                  </label>
-                  <button v-if="picPreview" type="button" class="pic-remove-btn" @click="clearPicSelection">
-                    <i class="bi bi-x me-1"></i>Remove selection
-                  </button>
-                  <p v-if="isEditMode && existingPic && picFile" class="pic-warning">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Existing photo will be deleted before uploading the new one.
-                  </p>
-                  <p class="pic-hint">JPG, PNG, GIF · Max 2 MB</p>
-                </div>
+                <!-- Camera overlay -->
+                <label class="pic-camera-btn" :title="picPreview || existingPic ? 'Change photo' : 'Upload photo'">
+                  <i class="bi bi-camera-fill"></i>
+                  <input ref="picInputRef" type="file" accept="image/*" style="display:none;" @change="onPicChange" />
+                </label>
+                <!-- Remove icon only (appears when new file is selected) -->
+                <button v-if="picPreview" type="button" class="pic-remove-icon" @click="clearPicSelection" title="Remove selection">
+                  <i class="bi bi-x"></i>
+                </button>
               </div>
+            
+              <p class="pic-hint">JPG, PNG, GIF · Max 2 MB</p>
             </div>
 
             <hr class="modal-divider" />
@@ -447,7 +444,7 @@ function avatarInitials(u) {
               <div class="col-12">
                 <label class="form-label fw-semibold">
                   Password <span class="req" v-if="!isEditMode">*</span>
-                  <span v-if="isEditMode" class="text-muted fw-normal" style="font-size:12px;"> — leave blank to keep current</span>
+                  <span v-if="isEditMode" class="label-optional"> — leave blank to keep current</span>
                 </label>
                 <input v-model="form.password" type="password" class="form-control"
                   :placeholder="isEditMode ? 'Leave blank to keep current password' : 'Min. 8 characters'" />
@@ -485,22 +482,23 @@ function avatarInitials(u) {
     </div>
 
     <!-- ─── Delete Confirm Modal ─── -->
-    <div class="modal fade" id="userDeleteModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content modal-modern">
-          <div class="modal-body text-center py-4 px-4">
-            <div class="del-icon-wrap"><i class="bi bi-trash3-fill"></i></div>
-            <h5 class="mt-3 mb-1 fw-bold">Delete User</h5>
-            <p class="text-muted mb-4" style="font-size:14px;">
-              Delete <strong>{{ deleteTarget.name }}</strong>? This cannot be undone.
-            </p>
-            <div class="d-flex gap-2 justify-content-center">
-              <button class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
-              <button class="btn btn-danger px-4" @click="confirmDelete" :disabled="isDeleting">
-                <span v-if="isDeleting"><span class="spinner-border spinner-border-sm me-2"></span>Deleting…</span>
-                <span v-else>Delete</span>
-              </button>
-            </div>
+    <div class="modal fade" id="userDeleteModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            You are about to delete <strong>{{ deleteTarget.name }}</strong>. Are you sure?
+            <div style="color:#cf7e7e;font-size:13px;margin-top:6px;">This action cannot be undone.</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" style="background:#cd7140;" @click="confirmDelete" :disabled="isDeleting">
+              <span v-if="isDeleting"><span class="spinner-border spinner-border-sm me-2"></span>Deleting…</span>
+              <span v-else>Delete</span>
+            </button>
           </div>
         </div>
       </div>
@@ -550,12 +548,15 @@ function avatarInitials(u) {
 /* ─── Table card ─── */
 .table-card {
   background:#fff; border-radius:14px; border:1px solid #E5E7EB;
-  overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,0.04);
+  box-shadow:0 1px 6px rgba(0,0,0,0.04); overflow:hidden;
 }
-.u-table { width:100%; border-collapse:collapse; font-size:14px; table-layout:fixed; }
-.u-table thead { background:#f8f9fa; border-bottom:2px solid #e5e7eb; }
-.u-table th { padding:13px 16px; text-align:left; font-weight:700; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.u-table td { padding:13px 16px; border-bottom:1px solid #f3f4f6; vertical-align:middle; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.table-wrapper { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.u-table { width:100%; border-collapse:collapse; font-size:14px; }
+.u-table thead { display:table-header-group; background:#f8f9fa; border-bottom:2px solid #e5e7eb; }
+.u-table tbody { display:table-row-group; }
+.u-table tr    { display:table-row; }
+.u-table th { display:table-cell; padding:13px 16px; text-align:left; font-weight:700; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.u-table td { display:table-cell; padding:13px 16px; border-bottom:1px solid #f3f4f6; vertical-align:middle; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .u-table tbody tr:hover { background:#fafbff; }
 .u-table tbody tr:last-child td { border-bottom:none; }
 
@@ -626,6 +627,7 @@ function avatarInitials(u) {
   padding:11px 14px; font-size:13.5px; color:#b91c1c; margin-bottom:16px;
 }
 .req { color:#dc2626; }
+.label-optional { font-weight:500; font-size:11.5px; color:#ed7d06; }
 .btn-save {
   background:linear-gradient(135deg,#1565c0,#42a5f5);
   color:#fff; border:none; border-radius:8px; padding:9px 22px;
@@ -635,36 +637,43 @@ function avatarInitials(u) {
 .btn-save:disabled { opacity:0.65; cursor:not-allowed; }
 
 /* ─── Profile pic ─── */
-.pic-section { margin-bottom:4px; }
-.pic-preview-wrap { display:flex; align-items:center; gap:20px; }
+.pic-section { text-align:center; margin-bottom:4px; }
+.pic-circle-wrap { position:relative; display:inline-block; margin-bottom:8px; }
 .pic-circle {
-  width:80px; height:80px; border-radius:50%; flex-shrink:0;
+  width:88px; height:88px; border-radius:50%;
   background:linear-gradient(135deg,#1976d2,#42a5f5);
   display:flex; align-items:center; justify-content:center;
   overflow:hidden; border:3px solid #e0eaff;
 }
 .pic-img { width:100%; height:100%; object-fit:cover; }
-.pic-placeholder { font-size:36px; color:rgba(255,255,255,0.85); }
-.pic-actions { display:flex; flex-direction:column; gap:6px; }
-.pic-upload-btn {
-  display:inline-flex; align-items:center;
-  background:#f0f5ff; color:#1976d2; border:1.5px solid #bfdbfe;
-  border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600;
-  cursor:pointer; transition:background 0.2s;
+.pic-placeholder { font-size:38px; color:rgba(255,255,255,0.85); }
+
+.pic-camera-btn {
+  position:absolute; bottom:2px; right:2px;
+  width:28px; height:28px; border-radius:50%;
+  background:#1976d2; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; cursor:pointer;
+  border:2px solid #fff;
+  transition:background 0.18s;
 }
-.pic-upload-btn:hover { background:#dbeafe; }
-.pic-remove-btn {
-  display:inline-flex; align-items:center;
-  background:#fef2f2; color:#dc2626; border:1.5px solid #fca5a5;
-  border-radius:8px; padding:5px 12px; font-size:12px; font-weight:500;
-  cursor:pointer; transition:background 0.2s;
+.pic-camera-btn:hover { background:#1565c0; }
+
+.pic-remove-icon {
+  position:absolute; top:0; right:0;
+  width:22px; height:22px; border-radius:50%;
+  background:#dc2626; color:#fff;
+  border:2px solid #fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; cursor:pointer; padding:0;
+  transition:background 0.18s;
 }
-.pic-remove-btn:hover { background:#fee2e2; }
-.pic-warning { font-size:12px; color:#92400e; background:#fef3c7; border-radius:6px; padding:5px 10px; margin:2px 0 0; }
+.pic-remove-icon:hover { background:#b91c1c; }
+
+.pic-warning { font-size:12px; color:#92400e; background:#fef3c7; border-radius:6px; padding:5px 10px; display:inline-block; margin:0 0 4px; }
 .pic-hint { font-size:11.5px; color:#9ca3af; margin:0; }
 
-/* ─── Delete modal ─── */
-.del-icon-wrap { font-size:44px; color:#dc2626; }
+/* ─── Delete modal ─── (uses Bootstrap's built-in rounded-3 shadow styles) */
 
 /* ─── Toast ─── */
 .sc-toast {
